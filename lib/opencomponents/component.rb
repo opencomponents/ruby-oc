@@ -2,13 +2,17 @@ require 'rest-client'
 
 module OpenComponents
   class Component
-    attr_accessor :name, :version, :params, :href, :version,
-                  :request_version, :type, :render_mode
+    attr_reader :name, :version, :params, :href, :version,
+                :type, :render_mode
 
     def initialize(name, params = {}, version = '')
       @name    = name
       @params  = params
       @version = version
+    end
+
+    def request_version
+      @request_version == '' ? nil : @request_version
     end
 
     protected
@@ -31,12 +35,14 @@ module OpenComponents
       RestClient::Request.execute(
         method: :get,
         url: url,
-        params: params,
         timeout: 10,
         headers: {
-          accept: accept_header
+          accept: accept_header,
+          params: params,
         }
       )
+    rescue RestClient::ResourceNotFound => e
+      fail ComponentNotFound, e.message
     end
 
     def response_data

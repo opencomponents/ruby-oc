@@ -1,6 +1,6 @@
 module OpenComponents
   class PrerenderedComponent < Component
-    attr_accessor :data, :template
+    attr_reader :data, :template
 
     def load
       template_data = response_data['template']

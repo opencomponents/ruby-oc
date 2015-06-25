@@ -7,6 +7,8 @@ require 'opencomponents/version'
 module OpenComponents
   DEFAULT_REGISTRY = 'http://localhost:3030'
 
+  ComponentNotFound = Class.new(RuntimeError)
+
   Configuration = Struct.new(:registry)
 
   def self.config
