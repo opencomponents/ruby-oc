@@ -20,7 +20,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
         end
 
         it 'sets the component version' do
-          expect(subject.version).to eq('1.0.0')
+          expect(subject.registry_version).to eq('1.0.0')
         end
 
         it 'sets the component request version' do
@@ -63,7 +63,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
         end
 
         it 'sets the component version' do
-          expect(subject.version).to eq('1.0.0')
+          expect(subject.registry_version).to eq('1.0.0')
         end
 
         it 'sets the component request version' do
@@ -194,6 +194,89 @@ RSpec.describe OpenComponents::PrerenderedComponent do
       it 'raises an exception' do
         expect { subject }.to raise_exception(OpenComponents::ComponentNotFound)
       end
+    end
+  end
+
+  describe '#flush!' do
+    let(:component) { described_class.new('foobar', {name: 'foobar'}, '1.0.1') }
+    let(:template)  { OpenComponents::Template.new('foo', 'bar', 'baz') }
+
+    before do
+      component.instance_variable_set(:@href, 'http://foo.com/bar/1.0.1')
+      component.instance_variable_set(:@registry_version, '1.0.1')
+      component.instance_variable_set(:@request_version, '1.0.1')
+      component.instance_variable_set(:@type, 'some-oc-type')
+      component.instance_variable_set(:@render_mode, 'rendered')
+      component.instance_variable_set(:@data, {'name' => 'foobar'})
+      component.instance_variable_set(:@template, template)
+    end
+
+    it 'does not modify name' do
+      component.flush!
+      expect(component.name).to eq 'foobar'
+    end
+
+    it 'does not modify params' do
+      component.flush!
+      expect(component.params).to eq({name: 'foobar'})
+    end
+
+    it 'does not modify version' do
+      component.flush!
+      expect(component.version).to eq '1.0.1'
+    end
+
+    it 'sets all allowed values to nil' do
+      component.flush!
+
+      expect(component.href).to_not eq 'http://foo.com/bar/1.0.1'
+      expect(component.registry_version).to_not eq '1.0.1'
+      expect(component.request_version).to_not eq '1.0.1'
+      expect(component.type).to_not eq 'some-oc-type'
+      expect(component.render_mode).to_not eq 'rendered'
+      expect(component.data).to_not eq({'name' => 'foobar'})
+      expect(component.template).to_not eq template
+    end
+
+    it 'returns self' do
+      expect(component.flush!).to eq component
+    end
+  end
+
+  describe '#reload!' do
+    let(:component) { described_class.new('foobar', {name: 'foobar'}) }
+
+    before do
+        stub_request(:get, "http://localhost:3030/foobar/").
+          with(
+            headers: {'Accept'=>'application/vnd.oc.prerendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
+            query: {name: 'foobar'}
+          ).
+          to_return(status: 200, body: '{"href":"http://foo.com/bar?name=foobar","type":"some-oc-type","version":"1.0.2","requestVersion":"","data":{"name":"foobar"},"template":{"src":"http://foo.com/bar/1.0.2/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', headers: {})
+
+      component.instance_variable_set(:@href, 'http://foo.com/bar/1.0.1')
+      component.instance_variable_set(:@registry_version, '1.0.1')
+      component.instance_variable_set(:@request_version, '')
+      component.instance_variable_set(:@type, 'some-oc-type')
+      component.instance_variable_set(:@render_mode, 'pre-rendered')
+      component.instance_variable_set(:@data, {'name' => 'foobar'})
+      component.instance_variable_set(:@template, OpenComponents::Template.new('foo', 'bar', 'baz'))
+    end
+
+    it 'reloads the component and sets the correct values' do
+      component.reload!
+
+      expect(component.href).to eq 'http://foo.com/bar?name=foobar'
+      expect(component.registry_version).to eq '1.0.2'
+      expect(component.request_version).to be nil
+      expect(component.type).to eq 'some-oc-type'
+      expect(component.render_mode).to eq 'pre-rendered'
+      expect(component.data).to eq({'name' => 'foobar'})
+      expect(component.template).to eq OpenComponents::Template.new(
+        'http://foo.com/bar/1.0.2/static/template.js',
+        'jade',
+        '0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea'
+      )
     end
   end
 end

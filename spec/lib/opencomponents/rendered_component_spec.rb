@@ -16,11 +16,11 @@ RSpec.describe OpenComponents::RenderedComponent do
         subject { described_class.new('foobar', {name: 'foobar'}).load }
 
         it 'sets the component href' do
-          expect(subject.href).to eq('http://localhost:3030/foobar?name=foobar') 
+          expect(subject.href).to eq('http://localhost:3030/foobar?name=foobar')
         end
 
         it 'sets the component version' do
-          expect(subject.version).to eq('1.0.0')
+          expect(subject.registry_version).to eq('1.0.0')
         end
 
         it 'sets the component request version' do
@@ -50,11 +50,11 @@ RSpec.describe OpenComponents::RenderedComponent do
         subject { described_class.new('foobar').load }
 
         it 'sets the component href' do
-          expect(subject.href).to eq('http://localhost:3030/foobar') 
+          expect(subject.href).to eq('http://localhost:3030/foobar')
         end
 
         it 'sets the component version' do
-          expect(subject.version).to eq('1.0.0')
+          expect(subject.registry_version).to eq('1.0.0')
         end
 
         it 'sets the component request version' do
@@ -89,7 +89,7 @@ RSpec.describe OpenComponents::RenderedComponent do
         subject { described_class.new('foobar', {name: 'foobar'}, '1.0.0').load }
 
         it 'sets the component href' do
-          expect(subject.href).to eq('http://localhost:3030/foobar/1.0.0?name=foobar') 
+          expect(subject.href).to eq('http://localhost:3030/foobar/1.0.0?name=foobar')
         end
 
         it 'sets the component version' do
@@ -124,7 +124,7 @@ RSpec.describe OpenComponents::RenderedComponent do
         subject { described_class.new('foobar', {}, '1.0.0').load }
 
         it 'sets the component href' do
-          expect(subject.href).to eq('http://localhost:3030/foobar/1.0.0') 
+          expect(subject.href).to eq('http://localhost:3030/foobar/1.0.0')
         end
 
         it 'sets the component version' do
@@ -161,6 +161,80 @@ RSpec.describe OpenComponents::RenderedComponent do
       it 'raises an exception' do
         expect { subject }.to raise_exception(OpenComponents::ComponentNotFound)
       end
+    end
+  end
+
+  describe '#flush!' do
+    let(:component) { described_class.new('foobar', {name: 'foobar'}, '1.0.1') }
+
+    before do
+      component.instance_variable_set(:@href, 'http://foo.com/bar/1.0.1')
+      component.instance_variable_set(:@registry_version, '1.0.1')
+      component.instance_variable_set(:@request_version, '1.0.1')
+      component.instance_variable_set(:@type, 'some-oc-type')
+      component.instance_variable_set(:@render_mode, 'rendered')
+      component.instance_variable_set(:@html, '<div>WEEEEEE</div>')
+    end
+
+    it 'does not modify name' do
+      component.flush!
+      expect(component.name).to eq 'foobar'
+    end
+
+    it 'does not modify params' do
+      component.flush!
+      expect(component.params).to eq({name: 'foobar'})
+    end
+
+    it 'does not modify version' do
+      component.flush!
+      expect(component.version).to eq '1.0.1'
+    end
+
+    it 'sets all allowed values to nil' do
+      component.flush!
+
+      expect(component.href).to_not eq 'http://foo.com/bar/1.0.1'
+      expect(component.registry_version).to_not eq '1.0.1'
+      expect(component.request_version).to_not eq '1.0.1'
+      expect(component.type).to_not eq 'some-oc-type'
+      expect(component.render_mode).to_not eq 'rendered'
+      expect(component.html).to_not eq '<div>WEEEEEE</div>'
+    end
+
+    it 'returns self' do
+      expect(component.flush!).to eq component
+    end
+  end
+
+  describe '#reload!' do
+    let(:component) { described_class.new('foobar', {name: 'foobar'}) }
+
+    before do
+      stub_request(:get, "http://localhost:3030/foobar/").
+        with(
+          headers: {'Accept'=>'', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
+          query: {name: 'foobar'}
+        ).
+        to_return(:status => 200, :body => '{"href":"http://foo.com/bar?name=foobar","type":"some-oc-type","version":"1.0.2","requestVersion":"","html":"<div>WE</div>","renderMode":"rendered"}', :headers => {})
+
+      component.instance_variable_set(:@href, 'http://foo.com/bar/1.0.1')
+      component.instance_variable_set(:@registry_version, '1.0.1')
+      component.instance_variable_set(:@request_version, '')
+      component.instance_variable_set(:@type, 'some-oc-type')
+      component.instance_variable_set(:@render_mode, 'rendered')
+      component.instance_variable_set(:@html, '<div>WEEEEEE</div>')
+    end
+
+    it 'reloads the component and sets the correct values' do
+      component.reload!
+
+      expect(component.href).to eq 'http://foo.com/bar?name=foobar'
+      expect(component.registry_version).to eq '1.0.2'
+      expect(component.request_version).to be nil
+      expect(component.type).to eq 'some-oc-type'
+      expect(component.render_mode).to eq 'rendered'
+      expect(component.html).to eq '<div>WE</div>'
     end
   end
 end
