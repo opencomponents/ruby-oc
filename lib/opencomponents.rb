@@ -1,6 +1,7 @@
 require 'opencomponents/component'
 require 'opencomponents/prerendered_component'
 require 'opencomponents/rendered_component'
+require 'opencomponents/renderer'
 require 'opencomponents/template'
 require 'opencomponents/version'
 
