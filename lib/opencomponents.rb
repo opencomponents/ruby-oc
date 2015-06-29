@@ -5,6 +5,8 @@ require 'opencomponents/renderer'
 require 'opencomponents/template'
 require 'opencomponents/version'
 
+require 'opencomponents/sinatra_helpers' if defined?(Sinatra)
+
 module OpenComponents
   DEFAULT_REGISTRY = 'http://localhost:3030'
 
