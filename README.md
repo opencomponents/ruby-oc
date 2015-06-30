@@ -1,5 +1,6 @@
 # opencomponents
 [![Build Status](https://travis-ci.org/opentable/ruby-oc.svg?branch=master)](https://travis-ci.org/opentable/ruby-oc)
+[![Coverage Status](https://coveralls.io/repos/opentable/ruby-oc/badge.svg)](https://coveralls.io/r/opentable/ruby-oc)
 
 [OpenComponents][1] for Ruby
 
