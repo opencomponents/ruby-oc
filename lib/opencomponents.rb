@@ -2,7 +2,6 @@ require 'opencomponents/component'
 require 'opencomponents/prerendered_component'
 require 'opencomponents/rendered_component'
 require 'opencomponents/renderer'
-require 'opencomponents/template'
 require 'opencomponents/version'
 
 require 'opencomponents/sinatra_helpers' if defined?(Sinatra)
@@ -13,6 +12,7 @@ module OpenComponents
   ComponentNotFound = Class.new(RuntimeError)
 
   Configuration = Struct.new(:registry)
+  Template      = Struct.new(:src, :type, :key)
 
   def self.config
     @@_config ||= Configuration.new(DEFAULT_REGISTRY)
