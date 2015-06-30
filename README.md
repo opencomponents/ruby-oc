@@ -1,4 +1,6 @@
 # opencomponents
+[![Build Status](https://travis-ci.org/opentable/ruby-oc.svg?branch=master)](https://travis-ci.org/opentable/ruby-oc)
+
 [OpenComponents][1] for Ruby
 
 [1]:https://github.com/opentable/oc

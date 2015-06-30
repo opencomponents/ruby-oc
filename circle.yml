@@ -1,5 +1,0 @@
-dependencies:
-  pre:
-    - gem install bundler
-  bundler:
-    without: [development]
