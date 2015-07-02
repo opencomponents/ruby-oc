@@ -4,9 +4,6 @@ require 'opencomponents/rendered_component'
 require 'opencomponents/renderer'
 require 'opencomponents/version'
 
-require 'opencomponents/railtie' if defined? Rails
-require 'opencomponents/sinatra_helpers' if defined? Sinatra
-
 module OpenComponents
   DEFAULT_REGISTRY = 'http://localhost:3030'
 
