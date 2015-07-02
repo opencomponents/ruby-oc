@@ -14,7 +14,6 @@ Gem::Specification.new do |spec|
   spec.email         = ['tbealmear@opentable.com']
   spec.files         = %w(LICENSE README.md opencomponents.gemspec)
   spec.files        += Dir.glob('lib/**/*.rb')
-  spec.files        += Dir.glob('spec/**/*')
   spec.homepage      = 'https://github.com/opentable/ruby-oc'
   spec.licenses      = ['MIT']
   spec.name          = 'opencomponents'
