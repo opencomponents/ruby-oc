@@ -1,15 +1,19 @@
 # opencomponents
 [![Build Status](https://travis-ci.org/opentable/ruby-oc.svg?branch=master)][1]
 [![Coverage Status](https://coveralls.io/repos/opentable/ruby-oc/badge.svg)][2]
-[![Gem Version](https://badge.fury.io/rb/opencomponents.svg)][3]
+[![Code Climate](https://codeclimate.com/github/opentable/ruby-oc/badges/gpa.svg)][3]
+[![Gem Version](https://badge.fury.io/rb/opencomponents.svg)][4]
+[![Dependency Status](https://gemnasium.com/opentable/ruby-oc.svg)][5]
 
 [1]:https://travis-ci.org/opentable/ruby-oc
 [2]:https://coveralls.io/r/opentable/ruby-oc
-[3]:http://badge.fury.io/rb/opencomponents
+[3]:https://codeclimate.com/github/opentable/ruby-oc
+[4]:http://badge.fury.io/rb/opencomponents
+[5]:https://gemnasium.com/opentable/ruby-oc
 
-[OpenComponents][4] for Ruby
+[OpenComponents][6] for Ruby
 
-[4]:https://github.com/opentable/oc
+[6]:https://github.com/opentable/oc
 
 ## Important
 This gem is still under heavy development and the API is likely to change at any
@@ -32,11 +36,11 @@ OpenComponents.configure { |config| config.registry = 'http://some.other.host' }
 ## Integrations
 Individual integrations for rendering components in Rails and Sinatra are
 available.
-  * [opencomponents-rails][5]
-  * [sinatra-opencomponents][6]
+  * [opencomponents-rails][7]
+  * [sinatra-opencomponents][8]
 
-[5]:https://github.com/opentable/opencomponents-rails
-[6]:https://github.com/opentable/sinatra-opencomponents
+[7]:https://github.com/opentable/opencomponents-rails
+[8]:https://github.com/opentable/sinatra-opencomponents
 
 ## Contributing
 Would be rad. Open a PR or Issue if you have an idea for improvements.
