@@ -16,10 +16,9 @@ This gem is still under heavy development and the API is likely to change at any
 time.
 
 ## Getting Started
-Add the gem to your Gemfile and run `bundle install` (prerelease versions aren't
-on RubyGems):
+Add the gem to your Gemfile and run `bundle install`:
 ```ruby
-gem 'opencomponents', github: 'opentable/ruby-oc'
+gem 'opencomponents', '~> 0.1.0'
 ```
 
 By default, the gem will attempt to use a component registry located at
