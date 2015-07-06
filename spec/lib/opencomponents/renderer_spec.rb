@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-class TestRenderer
+class TestRenderer # :nodoc:
   include OpenComponents::Renderer
 end
 

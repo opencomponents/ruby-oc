@@ -8,6 +8,7 @@ group :development do
   gem 'awesome_print', '~> 1.6'
   gem 'guard-rspec', '~> 4.5'
   gem 'simplecov', '~> 0.10'
+  gem 'rdoc', '~> 4.2'
 end
 
 group :test do

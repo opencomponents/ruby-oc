@@ -20,4 +20,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.summary       = spec.description
   spec.version       = OpenComponents::VERSION
+  spec.rdoc_options  = ['--markup=tomdoc']
 end
