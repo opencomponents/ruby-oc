@@ -33,6 +33,36 @@ it with:
 OpenComponents.configure { |config| config.registry = 'http://some.other.host' }
 ```
 
+## Getting Rendered Components
+To request an OpenComponent with its rendered HTML, you can create and load a new
+`RenderedComponent` object.
+```ruby
+component = OpenComponents::RenderedComponent.new('my-awesome-component')
+component.load
+```
+
+Optionally, you can also specify parameters and the component version to request:
+```ruby
+component = OpenComponents::RenderedComponent.new(
+  'my-awesome-component', {name: 'Kate'}, '1.0.2'
+)
+```
+
+## Getting Pre-rendered Components
+If you'd like to perform the component rendering yourself, you can request a
+pre-rendered component from a registry using a `PrerenderedComponent` object.
+```ruby
+component = OpenComponents::PrerenderedComponent.new('my-awesome-component')
+component.load
+```
+
+You can use the same optional `params` and `version` arguments as
+`RenderedComponent`s.
+
+**Note**: `PrerenderedComponent`s will only fetch component data for you - they do
+not provide an interface for rendering them. At the moment, it's up to you to determine
+the best way to render the template.
+
 ## Integrations
 Individual integrations for rendering components in Rails and Sinatra are
 available.

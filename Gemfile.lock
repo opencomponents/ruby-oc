@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    opencomponents (0.1.0.pre)
+    opencomponents (0.1.0)
       rest-client (~> 1.8)
 
 GEM
@@ -70,6 +70,8 @@ GEM
     rb-fsevent (0.9.5)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
+    rdoc (4.2.0)
+      json (~> 1.4)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
@@ -120,6 +122,7 @@ DEPENDENCIES
   pry (~> 0.10)
   pry-byebug (~> 3.1)
   rake (~> 10.4)
+  rdoc (~> 4.2)
   rspec (~> 3.3)
   simplecov (~> 0.10)
   webmock (~> 1.21)
