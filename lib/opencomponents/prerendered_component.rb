@@ -1,11 +1,31 @@
 module OpenComponents
   # Wrapper object for components using the `pre-rendered` rendering mode.
   class PrerenderedComponent < Component
+    # Internal: Default HTTP headers to send when requesting a component.
+    DEFAULT_HEADERS = {accept: 'application/vnd.oc.prerendered+json'}
+
     # Public: Returns a Hash of data to use when rendering the component.
     attr_reader :data
 
     # Public: Returns a Template with data for rendering the raw component.
     attr_reader :template
+
+    # Public: Initializes a new PrerenderedComponent.
+    #
+    # name - The String name of the component to request.
+    # opts - A Hash of options to use when requesting the component
+    #   (default: {}).
+    #        :params  - A Hash of parameters to send in the component request
+    #          (optional, default: {}).
+    #        :version - The String version of the component to request
+    #          (optional, default: nil).
+    #        :headers - A Hash of HTTP request headers to include in the
+    #          component request (optional, default: DEFAULT_HEADERS).
+    def initialize(name, opts = {})
+      super(name, opts)
+
+      @headers.merge!(DEFAULT_HEADERS)
+    end
 
     # Public: Executes a request for the Component against the configured
     #   registry and sets the component attributes.
@@ -26,14 +46,6 @@ module OpenComponents
       )
 
       super
-    end
-
-    private
-
-    # Internal: Returns the ACCEPT HTTP header used for requesting pre-rendered
-    #   templates from a registry.
-    def accept_header
-      'application/vnd.oc.prerendered+json'
     end
   end
 end

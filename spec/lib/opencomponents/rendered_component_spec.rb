@@ -7,13 +7,13 @@ RSpec.describe OpenComponents::RenderedComponent do
         before do
           stub_request(:get, "http://localhost:3030/foobar/").
             with(
-              headers: {'Accept'=>'', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
+              headers: {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
               query: {name: 'foobar'}
             ).
             to_return(status: 200, body: '{"href":"http://localhost:3030/foobar?name=foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","html":"<oc-component href=\"http://localhost:3030/foobar?name=foobar\" data-hash=\"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea\" id=\"8502960618\" data-rendered=\"true\" data-version=\"1.0.0\"><h1>ohai, my name is foobar</h1></oc-component>","renderMode":"rendered"}', headers: {})
         end
 
-        subject { described_class.new('foobar', {name: 'foobar'}).load }
+        subject { described_class.new('foobar', params: {name: 'foobar'}).load }
 
         it 'sets the component href' do
           expect(subject.href).to eq('http://localhost:3030/foobar?name=foobar')
@@ -43,7 +43,7 @@ RSpec.describe OpenComponents::RenderedComponent do
       context 'without request params' do
         before do
           stub_request(:get, "http://localhost:3030/foobar/").
-            with(headers: {'Accept'=>'', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
+            with(headers: {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
             to_return(status: 200, body: '{"href":"http://localhost:3030/foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","html":"<oc-component href=\"http://localhost:3030/foobar\" data-hash=\"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea\" id=\"8502960618\" data-rendered=\"true\" data-version=\"1.0.0\"><h1>ohai, my name is Todd</h1></oc-component>","renderMode":"rendered"}', headers: {})
         end
 
@@ -80,13 +80,13 @@ RSpec.describe OpenComponents::RenderedComponent do
         before do
           stub_request(:get, "http://localhost:3030/foobar/1.0.0").
             with(
-              headers: {'Accept'=>'', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
+              headers: {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
               query: {name: 'foobar'}
             ).
             to_return(status: 200, body: '{"href":"http://localhost:3030/foobar/1.0.0?name=foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"1.0.0","html":"<oc-component href=\"http://localhost:3030/foobar/1.0.0?name=foobar\" data-hash=\"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea\" id=\"6024920192\" data-rendered=\"true\" data-version=\"1.0.0\"><h1>ohai, my name is foobar</h1></oc-component>","renderMode":"rendered"}', headers: {})
         end
 
-        subject { described_class.new('foobar', {name: 'foobar'}, '1.0.0').load }
+        subject { described_class.new('foobar', params: {name: 'foobar'}, version: '1.0.0').load }
 
         it 'sets the component href' do
           expect(subject.href).to eq('http://localhost:3030/foobar/1.0.0?name=foobar')
@@ -117,11 +117,11 @@ RSpec.describe OpenComponents::RenderedComponent do
         before do
           stub_request(:get, "http://localhost:3030/foobar/1.0.0").
             with(
-              headers: {'Accept'=>'', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
+              headers: {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
             to_return(status: 200, body: '{"href":"http://localhost:3030/foobar/1.0.0","type":"oc-component-local","version":"1.0.0","requestVersion":"1.0.0","html":"<oc-component href=\"http://localhost:3030/foobar/1.0.0\" data-hash=\"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea\" id=\"6024920192\" data-rendered=\"true\" data-version=\"1.0.0\"><h1>ohai, my name is Todd</h1></oc-component>","renderMode":"rendered"}', headers: {})
         end
 
-        subject { described_class.new('foobar', {}, '1.0.0').load }
+        subject { described_class.new('foobar', version: '1.0.0').load }
 
         it 'sets the component href' do
           expect(subject.href).to eq('http://localhost:3030/foobar/1.0.0')
@@ -152,7 +152,7 @@ RSpec.describe OpenComponents::RenderedComponent do
     context 'for a missing component' do
       before do
         stub_request(:get, "http://localhost:3030/foo/").
-          with(headers: {'Accept'=>'', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
+          with(headers: {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
           to_return(status: 404, body: "", headers: {})
       end
 
@@ -164,8 +164,23 @@ RSpec.describe OpenComponents::RenderedComponent do
     end
   end
 
+  context 'with custom HTTP headers' do
+    let!(:stub) do
+      stub_request(:get, "http://localhost:3030/foobar/").
+        with(:headers => {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'Accept-Language'=>'emoji', 'User-Agent'=>'Ruby'}).
+        to_return(:status => 200, :body => '{"href":"http://localhost:3030/foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","html":"<oc-component href=\"http://localhost:3030/foobar\" data-hash=\"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea\" id=\"8502960618\" data-rendered=\"true\" data-version=\"1.0.0\"><h1>ohai, my name is Todd</h1></oc-component>","renderMode":"rendered"}', :headers => {})
+    end
+
+    subject { described_class.new('foobar', headers: {accept_language: 'emoji'}).load }
+
+    it 'includes custom headers in the request' do
+      subject
+      expect(stub).to have_been_requested
+    end
+  end
+
   describe '#flush!' do
-    let(:component) { described_class.new('foobar', {name: 'foobar'}, '1.0.1') }
+    let(:component) { described_class.new('foobar', params: {name: 'foobar'}, version: '1.0.1') }
 
     before do
       component.instance_variable_set(:@href, 'http://foo.com/bar/1.0.1')
@@ -208,12 +223,12 @@ RSpec.describe OpenComponents::RenderedComponent do
   end
 
   describe '#reload!' do
-    let(:component) { described_class.new('foobar', {name: 'foobar'}) }
+    let(:component) { described_class.new('foobar', params: {name: 'foobar'}) }
 
     before do
       stub_request(:get, "http://localhost:3030/foobar/").
         with(
-          headers: {'Accept'=>'', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
+          headers: {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
           query: {name: 'foobar'}
         ).
         to_return(:status => 200, :body => '{"href":"http://foo.com/bar?name=foobar","type":"some-oc-type","version":"1.0.2","requestVersion":"","html":"<div>WE</div>","renderMode":"rendered"}', :headers => {})
