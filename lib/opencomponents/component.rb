@@ -3,14 +3,17 @@ require 'rest-client'
 module OpenComponents
   # Wrapper object for a component fetched from an OC registry.
   class Component
-    # Public: Returns the String name of the component.
-    attr_reader :name
+    # Public: Gets/sets the String name of the component.
+    attr_accessor :name
 
-    # Public: Returns the desired String version of the component.
-    attr_reader :version
+    # Public: Gets/sets the desired String version of the component.
+    attr_accessor :version
 
-    # Public: Returns a Hash of params to send in the component request.
-    attr_reader :params
+    # Public: Gets/sets a Hash of params to send in the component request.
+    attr_accessor :params
+
+    # Public: Gets/sets a Hash of headers to send in the component request.
+    attr_accessor :headers
 
     # Public: Returns the String URL of the requested component.
     attr_reader :href
@@ -29,14 +32,20 @@ module OpenComponents
 
     # Public: Initializes a new Component subclass.
     #
-    # name    - The String name of the component to request.
-    # params  - A Hash of parameters to send in the component request
+    # name - The String name of the component to request.
+    # opts - A Hash of options to use when requesting the component
     #   (default: {}).
-    # version - The String version of the component to request (default: '').
-    def initialize(name, params = {}, version = '')
+    #        :params  - A Hash of parameters to send in the component request
+    #          (optional, default: {}).
+    #        :version - The String version of the component to request
+    #          (optional, default: '').
+    #        :headers - A Hash of HTTP request headers to include in the
+    #          component request (optional, default: {}).
+    def initialize(name, opts = {})
       @name    = name
-      @params  = params
-      @version = version
+      @params  = opts[:params]  || {}
+      @version = opts[:version] || ''
+      @headers = opts[:headers] || {}
     end
 
     # Public: Returns the String value of `requestVersion` from a component
@@ -105,14 +114,13 @@ module OpenComponents
     # Raises OpenComponents::ComponentNotFound if the registry responds with a
     #   404.
     def response
+      request_headers = headers.merge(params: params)
+
       RestClient::Request.execute(
         method: :get,
         url: url,
         timeout: 10,
-        headers: {
-          accept: accept_header,
-          params: params,
-        }
+        headers: request_headers
       )
     rescue RestClient::ResourceNotFound => e
       fail ComponentNotFound, e.message
@@ -133,7 +141,7 @@ module OpenComponents
     #
     # Returns an Array of instance variable Symbols allowed to be reset.
     def flush_variables_whitelist
-      instance_variables - [:@name, :@version, :@params]
+      instance_variables - [:@name, :@version, :@params, :@headers]
     end
   end
 end

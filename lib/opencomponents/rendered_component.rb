@@ -19,11 +19,5 @@ module OpenComponents
 
       super
     end
-
-    private
-
-    def accept_header # :nodoc:
-      nil
-    end
   end
 end

@@ -13,7 +13,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
             to_return(status: 200, body: '{"href":"http://localhost:3030/foobar?name=foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","data":{"name":"foobar"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', headers: {})
         end
 
-        subject { described_class.new('foobar', {name: 'foobar'}).load }
+        subject { described_class.new('foobar', params: {name: 'foobar'}).load }
 
         it 'sets the component href' do
           expect(subject.href).to eq('http://localhost:3030/foobar?name=foobar')
@@ -103,7 +103,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
             to_return(status: 200, body: '{"href":"http://localhost:3030/foobar/1.0.0?name=foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"1.0.0","data":{"name":"foobar"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', headers: {})
         end
 
-        subject { described_class.new('foobar', {name: 'foobar'}, '1.0.0').load }
+        subject { described_class.new('foobar', params: {name: 'foobar'}, version: '1.0.0').load }
 
         it 'sets the component href' do
           expect(subject.href).to eq('http://localhost:3030/foobar/1.0.0?name=foobar')
@@ -146,7 +146,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
             to_return(status: 200, body: '{"href":"http://localhost:3030/foobar/1.0.0","type":"oc-component-local","version":"1.0.0","requestVersion":"1.0.0","data":{"name":"Todd"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', headers: {})
         end
 
-        subject { described_class.new('foobar', {}, '1.0.0').load }
+        subject { described_class.new('foobar', version: '1.0.0').load }
 
         it 'sets the component href' do
           expect(subject.href).to eq('http://localhost:3030/foobar/1.0.0')
@@ -197,8 +197,23 @@ RSpec.describe OpenComponents::PrerenderedComponent do
     end
   end
 
+  context 'with custom HTTP headers' do
+    let!(:stub) do
+      stub_request(:get, "http://localhost:3030/foobar/").
+        with(:headers => {'Accept'=>'application/vnd.oc.prerendered+json', 'Accept-Encoding'=>'gzip, deflate', 'Accept-Language'=>'emoji', 'User-Agent'=>'Ruby'}).
+        to_return(:status => 200, :body => '{"href":"http://localhost:3030/foobar/1.0.0","type":"oc-component-local","version":"1.0.0","requestVersion":"","data":{"name":"Todd"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', :headers => {})
+    end
+
+    subject { described_class.new('foobar', headers: {accept_language: 'emoji'}).load }
+
+    it 'includes custom headers in the request' do
+      subject
+      expect(stub).to have_been_requested
+    end
+  end
+
   describe '#flush!' do
-    let(:component) { described_class.new('foobar', {name: 'foobar'}, '1.0.1') }
+    let(:component) { described_class.new('foobar', params: {name: 'foobar'}, version: '1.0.1') }
     let(:template)  { OpenComponents::Template.new('foo', 'bar', 'baz') }
 
     before do
@@ -244,7 +259,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
   end
 
   describe '#reload!' do
-    let(:component) { described_class.new('foobar', {name: 'foobar'}) }
+    let(:component) { described_class.new('foobar', params: {name: 'foobar'}) }
 
     before do
         stub_request(:get, "http://localhost:3030/foobar/").
