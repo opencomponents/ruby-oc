@@ -22,7 +22,7 @@ time.
 ## Getting Started
 Add the gem to your Gemfile and run `bundle install`:
 ```ruby
-gem 'opencomponents', '~> 0.2.0'
+gem 'opencomponents', '~> 0.3.0'
 ```
 
 By default, the gem will attempt to use a component registry located at
