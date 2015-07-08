@@ -1,5 +1,3 @@
-require 'rest-client'
-
 module OpenComponents
   # Wrapper object for a component fetched from an OC registry.
   class Component
@@ -113,6 +111,7 @@ module OpenComponents
     # Returns a response body String.
     # Raises OpenComponents::ComponentNotFound if the registry responds with a
     #   404.
+    # Raises OpenComponents::RegistryTimeout if the request times out.
     def response
       request_headers = headers.merge(params: params)
 
@@ -124,6 +123,8 @@ module OpenComponents
       )
     rescue RestClient::ResourceNotFound => e
       fail ComponentNotFound, e.message
+    rescue RestClient::RequestTimeout => e
+      fail RegistryTimeout, e.message
     end
 
     # Internal: Helper method for converting and memoizing registry response
