@@ -1,3 +1,5 @@
+require 'rest-client'
+
 require 'opencomponents/component'
 require 'opencomponents/prerendered_component'
 require 'opencomponents/rendered_component'
@@ -11,6 +13,9 @@ module OpenComponents
   # Internal: Custom exception class to raise in the event a component cannot be
   #   found in the registry.
   ComponentNotFound = Class.new(RuntimeError)
+
+  # Internal: Custom exception class to raise for response timeouts.
+  RegistryTimeout = Class.new(RestClient::RequestTimeout)
 
   # Internal: Stores configuration data.
   #

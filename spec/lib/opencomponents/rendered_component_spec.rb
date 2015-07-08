@@ -162,20 +162,32 @@ RSpec.describe OpenComponents::RenderedComponent do
         expect { subject }.to raise_exception(OpenComponents::ComponentNotFound)
       end
     end
-  end
 
-  context 'with custom HTTP headers' do
-    let!(:stub) do
-      stub_request(:get, "http://localhost:3030/foobar/").
-        with(:headers => {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'Accept-Language'=>'emoji', 'User-Agent'=>'Ruby'}).
-        to_return(:status => 200, :body => '{"href":"http://localhost:3030/foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","html":"<oc-component href=\"http://localhost:3030/foobar\" data-hash=\"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea\" id=\"8502960618\" data-rendered=\"true\" data-version=\"1.0.0\"><h1>ohai, my name is Todd</h1></oc-component>","renderMode":"rendered"}', :headers => {})
+    context 'for a registry timeout' do
+      before do
+        stub_request(:get, "http://localhost:3030/foo/").to_timeout
+      end
+
+      subject { described_class.new('foo').load }
+
+      it 'raises an exception' do
+        expect { subject }.to raise_exception(OpenComponents::RegistryTimeout)
+      end
     end
 
-    subject { described_class.new('foobar', headers: {accept_language: 'emoji'}).load }
+    context 'with custom HTTP headers' do
+      let!(:stub) do
+        stub_request(:get, "http://localhost:3030/foobar/").
+          with(:headers => {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'Accept-Language'=>'emoji', 'User-Agent'=>'Ruby'}).
+          to_return(:status => 200, :body => '{"href":"http://localhost:3030/foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","html":"<oc-component href=\"http://localhost:3030/foobar\" data-hash=\"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea\" id=\"8502960618\" data-rendered=\"true\" data-version=\"1.0.0\"><h1>ohai, my name is Todd</h1></oc-component>","renderMode":"rendered"}', :headers => {})
+      end
 
-    it 'includes custom headers in the request' do
-      subject
-      expect(stub).to have_been_requested
+      subject { described_class.new('foobar', headers: {accept_language: 'emoji'}).load }
+
+      it 'includes custom headers in the request' do
+        subject
+        expect(stub).to have_been_requested
+      end
     end
   end
 

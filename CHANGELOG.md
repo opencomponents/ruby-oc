@@ -1,6 +1,10 @@
+## 0.3.0
+ * Changes:
+  * Registry request timeouts now raise `OpenComponents::RegistryTimeout`.
+
 ## 0.2.0
  * Changes:
-  * Changed Component initialization to accept an unordered options Hash for
+  * Changed Component initialization to accept an options Hash for
     optional arguments.
     
     ```ruby
