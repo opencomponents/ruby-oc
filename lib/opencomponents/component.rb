@@ -118,7 +118,7 @@ module OpenComponents
       RestClient::Request.execute(
         method: :get,
         url: url,
-        timeout: 10,
+        timeout: OpenComponents.config.timeout,
         headers: request_headers
       )
     rescue RestClient::ResourceNotFound => e
