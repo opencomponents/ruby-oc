@@ -10,17 +10,20 @@ module OpenComponents
   # Public: Default OC registry URL (http://localhost:3030).
   DEFAULT_REGISTRY = 'http://localhost:3030'
 
+  # Public: Default request timeout in seconds (5)
+  DEFAULT_TIMEOUT = 5
+
   # Internal: Custom exception class to raise in the event a component cannot be
   #   found in the registry.
   ComponentNotFound = Class.new(RuntimeError)
 
   # Internal: Custom exception class to raise for response timeouts.
-  RegistryTimeout = Class.new(RestClient::RequestTimeout)
+  RegistryTimeout = Class.new(RuntimeError)
 
   # Internal: Stores configuration data.
   #
   # registry - String for the registry host.
-  Configuration = Struct.new(:registry)
+  Configuration = Struct.new(:registry, :timeout)
 
   # Internal: Wrapper object for pre-rendered OC templates.
   #
@@ -33,7 +36,7 @@ module OpenComponents
   #
   # Returns the Configuration if set, a default Configuration if not set.
   def self.config
-    @@_config ||= Configuration.new(DEFAULT_REGISTRY)
+    @@_config ||= Configuration.new(DEFAULT_REGISTRY, DEFAULT_TIMEOUT)
   end
 
   # Public: Setter for Configuration.
