@@ -1,3 +1,15 @@
+## 0.4.0
+ * Changes:
+  * Default request timeout length shortened to 5 seconds.
+  * Registry request timeout lengths can be configured.
+    ```ruby
+    OpenComponents.configure { |c| c.timeout = 10 }
+    ```
+
+ * Bugfixes
+  * Fixed an issue where catching a request timeout would result in an infinite
+    loop.
+
 ## 0.3.0
  * Changes:
   * Registry request timeouts now raise `OpenComponents::RegistryTimeout`.
