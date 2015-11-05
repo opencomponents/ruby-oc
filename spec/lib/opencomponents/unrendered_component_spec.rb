@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-RSpec.describe OpenComponents::PrerenderedComponent do
+RSpec.describe OpenComponents::UnrenderedComponent do
   describe '#load' do
     context 'for the latest component version' do
       context 'with request params' do
         before do
           stub_request(:get, "http://localhost:3030/foobar/").
             with(
-              headers: {'Accept'=>'application/vnd.oc.prerendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
+              headers: {'Accept'=>'application/vnd.oc.unrendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
               query: {name: 'foobar'}
             ).
-            to_return(status: 200, body: '{"href":"http://localhost:3030/foobar?name=foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","data":{"name":"foobar"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', headers: {})
+            to_return(status: 200, body: '{"href":"http://localhost:3030/foobar?name=foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","data":{"name":"foobar"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"unrendered"}', headers: {})
         end
 
         subject { described_class.new('foobar', params: {name: 'foobar'}).load }
@@ -32,7 +32,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
         end
 
         it 'sets the component render mode' do
-          expect(subject.render_mode).to eq 'pre-rendered'
+          expect(subject.render_mode).to eq 'unrendered'
         end
 
         it 'sets the component data' do
@@ -52,8 +52,8 @@ RSpec.describe OpenComponents::PrerenderedComponent do
         before do
           stub_request(:get, "http://localhost:3030/foobar/").
             with(
-              headers: {'Accept'=>'application/vnd.oc.prerendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
-            to_return(status: 200, body: '{"href":"http://localhost:3030/foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","data":{"name":"Todd"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', headers: {})
+              headers: {'Accept'=>'application/vnd.oc.unrendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
+            to_return(status: 200, body: '{"href":"http://localhost:3030/foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"","data":{"name":"Todd"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"unrendered"}', headers: {})
         end
 
         subject { described_class.new('foobar').load }
@@ -75,7 +75,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
         end
 
         it 'sets the component render mode' do
-          expect(subject.render_mode).to eq 'pre-rendered'
+          expect(subject.render_mode).to eq 'unrendered'
         end
 
         it 'sets the component data' do
@@ -97,10 +97,10 @@ RSpec.describe OpenComponents::PrerenderedComponent do
         before do
           stub_request(:get, "http://localhost:3030/foobar/1.0.0").
             with(
-              headers: {'Accept'=>'application/vnd.oc.prerendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
+              headers: {'Accept'=>'application/vnd.oc.unrendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
               query: {name: 'foobar'}
             ).
-            to_return(status: 200, body: '{"href":"http://localhost:3030/foobar/1.0.0?name=foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"1.0.0","data":{"name":"foobar"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', headers: {})
+            to_return(status: 200, body: '{"href":"http://localhost:3030/foobar/1.0.0?name=foobar","type":"oc-component-local","version":"1.0.0","requestVersion":"1.0.0","data":{"name":"foobar"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"unrendered"}', headers: {})
         end
 
         subject { described_class.new('foobar', params: {name: 'foobar'}, version: '1.0.0').load }
@@ -122,7 +122,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
         end
 
         it 'sets the component render mode' do
-          expect(subject.render_mode).to eq 'pre-rendered'
+          expect(subject.render_mode).to eq 'unrendered'
         end
 
         it 'sets the component data' do
@@ -142,8 +142,8 @@ RSpec.describe OpenComponents::PrerenderedComponent do
         before do
           stub_request(:get, "http://localhost:3030/foobar/1.0.0").
             with(
-              headers: {'Accept'=>'application/vnd.oc.prerendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
-            to_return(status: 200, body: '{"href":"http://localhost:3030/foobar/1.0.0","type":"oc-component-local","version":"1.0.0","requestVersion":"1.0.0","data":{"name":"Todd"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', headers: {})
+              headers: {'Accept'=>'application/vnd.oc.unrendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
+            to_return(status: 200, body: '{"href":"http://localhost:3030/foobar/1.0.0","type":"oc-component-local","version":"1.0.0","requestVersion":"1.0.0","data":{"name":"Todd"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"unrendered"}', headers: {})
         end
 
         subject { described_class.new('foobar', version: '1.0.0').load }
@@ -165,7 +165,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
         end
 
         it 'sets the component render mode' do
-          expect(subject.render_mode).to eq 'pre-rendered'
+          expect(subject.render_mode).to eq 'unrendered'
         end
 
         it 'sets the component data' do
@@ -185,7 +185,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
     context 'for a missing component' do
       before do
         stub_request(:get, "http://localhost:3030/foo/").
-          with(headers: {'Accept'=>'application/vnd.oc.prerendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
+          with(headers: {'Accept'=>'application/vnd.oc.unrendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
           to_return(status: 404, body: "", headers: {})
       end
 
@@ -211,8 +211,8 @@ RSpec.describe OpenComponents::PrerenderedComponent do
     context 'with custom HTTP headers' do
       let!(:stub) do
         stub_request(:get, "http://localhost:3030/foobar/").
-          with(:headers => {'Accept'=>'application/vnd.oc.prerendered+json', 'Accept-Encoding'=>'gzip, deflate', 'Accept-Language'=>'emoji', 'User-Agent'=>'Ruby'}).
-          to_return(:status => 200, :body => '{"href":"http://localhost:3030/foobar/1.0.0","type":"oc-component-local","version":"1.0.0","requestVersion":"","data":{"name":"Todd"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', :headers => {})
+          with(:headers => {'Accept'=>'application/vnd.oc.unrendered+json', 'Accept-Encoding'=>'gzip, deflate', 'Accept-Language'=>'emoji', 'User-Agent'=>'Ruby'}).
+          to_return(:status => 200, :body => '{"href":"http://localhost:3030/foobar/1.0.0","type":"oc-component-local","version":"1.0.0","requestVersion":"","data":{"name":"Todd"},"template":{"src":"http://localhost:3030/foobar/1.0.0/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"unrendered"}', :headers => {})
       end
 
       subject { described_class.new('foobar', headers: {accept_language: 'emoji'}).load }
@@ -276,16 +276,16 @@ RSpec.describe OpenComponents::PrerenderedComponent do
     before do
         stub_request(:get, "http://localhost:3030/foobar/").
           with(
-            headers: {'Accept'=>'application/vnd.oc.prerendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
+            headers: {'Accept'=>'application/vnd.oc.unrendered+json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'},
             query: {name: 'foobar'}
           ).
-          to_return(status: 200, body: '{"href":"http://foo.com/bar?name=foobar","type":"some-oc-type","version":"1.0.2","requestVersion":"","data":{"name":"foobar"},"template":{"src":"http://foo.com/bar/1.0.2/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"pre-rendered"}', headers: {})
+          to_return(status: 200, body: '{"href":"http://foo.com/bar?name=foobar","type":"some-oc-type","version":"1.0.2","requestVersion":"","data":{"name":"foobar"},"template":{"src":"http://foo.com/bar/1.0.2/static/template.js","type":"jade","key":"0fe4b3fb2d6c0810f0d97a222a7e61eb91243bea"},"renderMode":"unrendered"}', headers: {})
 
       component.instance_variable_set(:@href, 'http://foo.com/bar/1.0.1')
       component.instance_variable_set(:@registry_version, '1.0.1')
       component.instance_variable_set(:@request_version, '')
       component.instance_variable_set(:@type, 'some-oc-type')
-      component.instance_variable_set(:@render_mode, 'pre-rendered')
+      component.instance_variable_set(:@render_mode, 'unrendered')
       component.instance_variable_set(:@data, {'name' => 'foobar'})
       component.instance_variable_set(:@template, OpenComponents::Template.new('foo', 'bar', 'baz'))
     end
@@ -297,7 +297,7 @@ RSpec.describe OpenComponents::PrerenderedComponent do
       expect(component.registry_version).to eq '1.0.2'
       expect(component.request_version).to be nil
       expect(component.type).to eq 'some-oc-type'
-      expect(component.render_mode).to eq 'pre-rendered'
+      expect(component.render_mode).to eq 'unrendered'
       expect(component.data).to eq({'name' => 'foobar'})
       expect(component.template).to eq OpenComponents::Template.new(
         'http://foo.com/bar/1.0.2/static/template.js',

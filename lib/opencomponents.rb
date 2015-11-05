@@ -1,9 +1,9 @@
 require 'rest-client'
 
 require 'opencomponents/component'
-require 'opencomponents/prerendered_component'
 require 'opencomponents/rendered_component'
 require 'opencomponents/renderer'
+require 'opencomponents/unrendered_component'
 require 'opencomponents/version'
 
 module OpenComponents
@@ -25,7 +25,7 @@ module OpenComponents
   # registry - String for the registry host.
   Configuration = Struct.new(:registry, :timeout)
 
-  # Internal: Wrapper object for pre-rendered OC templates.
+  # Internal: Wrapper object for unrendered OC templates.
   #
   # src  - String for the template URL.
   # type - String for template engine type.
