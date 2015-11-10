@@ -52,18 +52,18 @@ component = OpenComponents::RenderedComponent.new(
 )
 ```
 
-## Getting Pre-rendered Components
-If you'd like to perform the component rendering yourself, you can request a
-pre-rendered component from a registry using a `PrerenderedComponent` object.
+## Getting Unrendered Components
+If you'd like to perform the component rendering yourself, you can request an
+unrendered component from a registry using a `UnrenderedComponent` object.
 ```ruby
-component = OpenComponents::PrerenderedComponent.new('my-awesome-component')
+component = OpenComponents::UnrenderedComponent.new('my-awesome-component')
 component.load
 ```
 
 You can use the same optional `params`, `version`, and `headers` arguments as
 `RenderedComponent`s.
 
-**Note**: `PrerenderedComponent`s will only fetch component data for you - they
+**Note**: `UnrenderedComponent`s will only fetch component data for you - they
 do not provide an interface for rendering them. At the moment, it's up to you to
 determine the best way to render the template.
 

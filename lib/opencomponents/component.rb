@@ -25,7 +25,7 @@ module OpenComponents
     attr_reader :type
 
     # Public: Returns the String render mode of the component as served by the
-    #   registry. Generally either `rendered` or `pre-rendered`.
+    #   registry. Generally either `rendered` or `unrendered`.
     attr_reader :render_mode
 
     # Public: Initializes a new Component subclass.

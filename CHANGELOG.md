@@ -1,3 +1,7 @@
+## 0.5.0
+ * Changes:
+  * OpenComponents::PrerenderedComponent is now OpenComponents::UnrenderedComponent
+
 ## 0.4.0
  * Changes:
   * Default request timeout length shortened to 5 seconds.
