@@ -2,7 +2,7 @@ module OpenComponents
   # Wrapper object for components using the `unrendered` rendering mode.
   class UnrenderedComponent < Component
     # Internal: Default HTTP headers to send when requesting a component.
-    DEFAULT_HEADERS = {accept: 'application/vnd.oc.unrendered+json'}
+    DEFAULT_HEADERS = {'Accept' => 'application/vnd.oc.unrendered+json'}
 
     # Public: Returns a Hash of data to use when rendering the component.
     attr_reader :data

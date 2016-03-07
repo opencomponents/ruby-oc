@@ -1,4 +1,5 @@
-require 'rest-client'
+require 'json'
+require 'net/http'
 
 require 'opencomponents/component'
 require 'opencomponents/rendered_component'

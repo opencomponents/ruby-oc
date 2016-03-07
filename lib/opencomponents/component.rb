@@ -1,6 +1,8 @@
 module OpenComponents
   # Wrapper object for a component fetched from an OC registry.
   class Component
+    REGISTRY_TIMEOUT_MESSAGE = 'The registry took too long to respond.'.freeze
+
     # Public: Gets/sets the String name of the component.
     attr_accessor :name
 
@@ -102,8 +104,10 @@ module OpenComponents
     # Internal: Builds the URL to send a component request to.
     #
     # Returns the String URL to request a component from.
-    def url
-      File.join(OpenComponents.config.registry, name, version)
+    def uri
+      URI(File.join(OpenComponents.config.registry, name, version)).tap do |u|
+        u.query = URI.encode_www_form(params)
+      end
     end
 
     # Internal: Executes a component request against the configured registry.
@@ -113,18 +117,29 @@ module OpenComponents
     #   404.
     # Raises OpenComponents::RegistryTimeout if the request times out.
     def response
-      request_headers = headers.merge(params: params)
+      _response = Net::HTTP.start(
+        uri.host,
+        uri.port,
+        read_timeout: OpenComponents.config.timeout,
+        open_timeout: OpenComponents.config.timeout
+      ) { |http| http.request request }
 
-      RestClient::Request.execute(
-        method: :get,
-        url: url,
-        timeout: OpenComponents.config.timeout,
-        headers: request_headers
-      )
-    rescue RestClient::ResourceNotFound => e
-      fail ComponentNotFound, e.message
-    rescue RestClient::RequestTimeout => e
-      fail RegistryTimeout, e.message
+      case _response
+      when Net::HTTPNotFound
+        fail ComponentNotFound, "Component #{name} not found."
+      when Net::HTTPRequestTimeOut
+        fail_with_timeout
+      end
+
+      _response
+    rescue Timeout::Error
+      fail_with_timeout
+    end
+
+    def request
+      Net::HTTP::Get.new(uri).tap do |r|
+        headers.each { |k, v| r[k] = v }
+      end
     end
 
     # Internal: Helper method for converting and memoizing registry response
@@ -132,7 +147,11 @@ module OpenComponents
     #
     # Returns a Hash of registry response data.
     def response_data
-      @_response_data ||= JSON.parse(response)
+      @_response_data ||= JSON.parse(response.body)
+    end
+
+    def fail_with_timeout
+      fail RegistryTimeout, REGISTRY_TIMEOUT_MESSAGE
     end
 
     private
