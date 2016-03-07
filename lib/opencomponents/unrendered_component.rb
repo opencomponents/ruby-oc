@@ -13,14 +13,13 @@ module OpenComponents
     # Public: Initializes a new UnrenderedComponent.
     #
     # name - The String name of the component to request.
-    # opts - A Hash of options to use when requesting the component
-    #   (default: {}).
+    # opts - A Hash of options to use when requesting the component (default: {}):
     #        :params  - A Hash of parameters to send in the component request
-    #          (optional, default: {}).
+    #        (optional, default: {}).
     #        :version - The String version of the component to request
-    #          (optional, default: nil).
+    #        (optional, default: nil).
     #        :headers - A Hash of HTTP request headers to include in the
-    #          component request (optional, default: DEFAULT_HEADERS).
+    #        component request (optional, default: DEFAULT_HEADERS).
     def initialize(name, opts = {})
       super(name, opts)
 
@@ -28,7 +27,7 @@ module OpenComponents
     end
 
     # Public: Executes a request for the Component against the configured
-    #   registry and sets the component attributes.
+    # registry and sets the component attributes.
     #
     # Examples
     #

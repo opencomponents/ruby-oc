@@ -1,8 +1,8 @@
 module OpenComponents
   # Wrapper object for a component fetched from an OC registry.
   class Component
-    REGISTRY_TIMEOUT_MESSAGE = 'The registry took too long to respond.'.freeze
-    BLANK = ''.freeze
+    REGISTRY_TIMEOUT_MESSAGE = 'The registry took too long to respond.'.freeze #:nodoc:
+    BLANK = ''.freeze #:nodoc:
 
     # Public: Gets/sets the String name of the component.
     attr_accessor :name
@@ -16,32 +16,31 @@ module OpenComponents
     # Public: Gets/sets a Hash of headers to send in the component request.
     attr_accessor :headers
 
-    # Public: Returns the String URL of the requested component.
+    # Public: Gets the String URL of the requested component.
     attr_reader :href
 
-    # Public: Returns the String version of the component as served by the
-    #   registry.
+    # Public: Gets the String version of the component as served by the
+    # registry.
     attr_reader :registry_version
 
-    # Public: Returns the String type of the component as served by the
-    #   registry.
+    # Public: Gets the String type of the component as served by the
+    # registry.
     attr_reader :type
 
-    # Public: Returns the String render mode of the component as served by the
-    #   registry. Generally either `rendered` or `unrendered`.
+    # Public: Gets the String render mode of the component as served by the
+    # registry. Generally either `rendered` or `unrendered`.
     attr_reader :render_mode
 
     # Public: Initializes a new Component subclass.
     #
     # name - The String name of the component to request.
-    # opts - A Hash of options to use when requesting the component
-    #   (default: {}).
+    # opts - A Hash of options to use when requesting the component (default: {}):
     #        :params  - A Hash of parameters to send in the component request
-    #          (optional, default: {}).
+    #        (optional, default: {}).
     #        :version - The String version of the component to request
-    #          (optional, default: '').
-    #        :headers - A Hash of HTTP request headers to include in the
-    #          component request (optional, default: {}).
+    #        (optional, default: '').
+    #        :headers - A Hash of HTTP request headers to include in the component
+    #        request (optional, default: {}).
     def initialize(name, opts = {})
       @name    = name
       @params  = opts[:params]  || {}
@@ -50,7 +49,7 @@ module OpenComponents
     end
 
     # Public: Returns the String value of `requestVersion` from a component
-    #   response, `nil` if not present.
+    # response, `nil` if not present.
     def request_version
       @request_version == BLANK ? nil : @request_version
     end
@@ -72,7 +71,7 @@ module OpenComponents
     end
 
     # Public: Resets all component attributes and reloads them from a registry
-    #   response.
+    # response.
     #
     # Examples
     #
@@ -88,8 +87,8 @@ module OpenComponents
     private
 
     # Internal: Executes a component request and sets attributes common to all
-    #   component render modes. Public-facing `#load` methods exist on Component
-    #   subclasses.
+    # component render modes. Public-facing `#load` methods exist on Component
+    # subclasses.
     #
     # Returns the Component.
     def load
@@ -115,7 +114,7 @@ module OpenComponents
     #
     # Returns a response body String.
     # Raises OpenComponents::ComponentNotFound if the registry responds with a
-    #   404.
+    # 404.
     # Raises OpenComponents::RegistryTimeout if the request times out.
     def response
       _response = Net::HTTP.start(
@@ -137,6 +136,8 @@ module OpenComponents
       fail_with_timeout
     end
 
+    # Internal: Helper method for building the component request. Includes
+    # all params and headers.
     def request
       Net::HTTP::Get.new(uri).tap do |r|
         headers.each { |k, v| r[k] = v }
@@ -144,7 +145,7 @@ module OpenComponents
     end
 
     # Internal: Helper method for converting and memoizing registry response
-    #   data.
+    # data.
     #
     # Returns a Hash of registry response data.
     def response_data
@@ -156,7 +157,7 @@ module OpenComponents
     end
 
     # Internal: Whitelists instance variable names allowed to be reset when
-    #   calling `#flush!`.
+    # calling `#flush!`.
     #
     # Returns an Array of instance variable Symbols allowed to be reset.
     def flush_variables_whitelist
