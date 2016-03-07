@@ -197,14 +197,27 @@ RSpec.describe OpenComponents::UnrenderedComponent do
     end
 
     context 'for a registry timeout' do
-      before do
-        stub_request(:get, "http://localhost:3030/foo/").to_timeout
-      end
-
       subject { described_class.new('foo').load }
 
-      it 'raises an exception' do
-        expect { subject }.to raise_exception(OpenComponents::RegistryTimeout)
+      context 'HTTP 408' do
+        before do
+          stub_request(:get, "http://localhost:3030/foo/").
+            to_return(status: 408, body: "", headers: {})
+        end
+
+        it 'raises an exception' do
+          expect { subject }.to raise_exception(OpenComponents::RegistryTimeout)
+        end
+      end
+
+      context 'Connection Timeout' do
+        before do
+          stub_request(:get, "http://localhost:3030/foo/").to_timeout
+        end
+
+        it 'raises an exception' do
+          expect { subject }.to raise_exception(OpenComponents::RegistryTimeout)
+        end
       end
     end
 
