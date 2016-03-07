@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    opencomponents (0.5.0)
+    opencomponents (1.0.0.pre)
 
 GEM
   remote: https://rubygems.org/

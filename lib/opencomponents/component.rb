@@ -34,18 +34,16 @@ module OpenComponents
     # Public: Initializes a new Component subclass.
     #
     # name - The String name of the component to request.
-    # opts - A Hash of options to use when requesting the component (default: {}):
-    #        :params  - A Hash of parameters to send in the component request
-    #        (optional, default: {}).
-    #        :version - The String version of the component to request
-    #        (optional, default: '').
-    #        :headers - A Hash of HTTP request headers to include in the component
-    #        request (optional, default: {}).
-    def initialize(name, opts = {})
+    #
+    # Options
+    #   params  - A Hash of parameters to send in the component request (default: {}).
+    #   version - The String version of the component to request (default: '').
+    #   headers - A Hash of HTTP request headers to include in the request (default: {}).
+    def initialize(name, params: {}, version: nil, headers: {})
       @name    = name
-      @params  = opts[:params]  || {}
-      @version = opts[:version] || BLANK
-      @headers = opts[:headers] || {}
+      @params  = params
+      @version = version || BLANK
+      @headers = headers
     end
 
     # Public: Returns the String value of `requestVersion` from a component

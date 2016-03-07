@@ -1,6 +1,7 @@
 ## 1.0.0.pre
  * Changes:
-  * Dropped `rest-client` dependency
+  * Dropped support for Ruby 1.9.3.
+  * Dropped `rest-client` dependency.
   * Request headers now use string keys instead of symbols.
     ```ruby
     # Old
