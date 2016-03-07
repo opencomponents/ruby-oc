@@ -2,6 +2,7 @@ module OpenComponents
   # Wrapper object for a component fetched from an OC registry.
   class Component
     REGISTRY_TIMEOUT_MESSAGE = 'The registry took too long to respond.'.freeze
+    BLANK = ''.freeze
 
     # Public: Gets/sets the String name of the component.
     attr_accessor :name
@@ -44,14 +45,14 @@ module OpenComponents
     def initialize(name, opts = {})
       @name    = name
       @params  = opts[:params]  || {}
-      @version = opts[:version] || ''
+      @version = opts[:version] || BLANK
       @headers = opts[:headers] || {}
     end
 
     # Public: Returns the String value of `requestVersion` from a component
     #   response, `nil` if not present.
     def request_version
-      @request_version == '' ? nil : @request_version
+      @request_version == BLANK ? nil : @request_version
     end
 
     # Public: Resets all component attributes from a registry response to `nil`.
@@ -84,7 +85,7 @@ module OpenComponents
       load
     end
 
-    protected
+    private
 
     # Internal: Executes a component request and sets attributes common to all
     #   component render modes. Public-facing `#load` methods exist on Component
@@ -153,8 +154,6 @@ module OpenComponents
     def fail_with_timeout
       fail RegistryTimeout, REGISTRY_TIMEOUT_MESSAGE
     end
-
-    private
 
     # Internal: Whitelists instance variable names allowed to be reset when
     #   calling `#flush!`.
